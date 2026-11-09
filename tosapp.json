@@ -1,0 +1,113 @@
+{
+  "app_id": "anythingllmdocker",
+  "title": "AnythingLLM",
+  "image": "mintplexlabs/anythingllm:1.19.0",
+  "repo_name": "anythingllm",
+  "mode": "plain",
+  "container_port": 3001,
+  "category": [
+    "Artificial_Intelligence"
+  ],
+  "volumes": [
+    {
+      "host": "/Volume1/DockerAppData/anythingllmdocker/storage",
+      "container": "/app/server/storage"
+    }
+  ],
+  "env": {
+    "TZ": "Asia/Shanghai",
+    "STORAGE_DIR": "/app/server/storage"
+  },
+  "auth": "Mintplex-Labs",
+  "upstream_url": "https://github.com/Mintplex-Labs/anything-llm",
+  "upstream_license": "MIT",
+  "descript": "AnythingLLM is a private AI workspace: chat with your own documents, build knowledge bases, and pick the model you want - a local Ollama instance on your NAS or a cloud API key. Everything (documents, embeddings, chat history and settings) is stored on your own device, not in a vendor cloud, and the whole workspace lives in the application data folder.",
+  "release_note": "1. First release: AnythingLLM 1.19.0 from Docker Hub as a non-root container. Private RAG workspace with document chat, vector storage and local/remote model support; all data in the application data folder.",
+  "important": "Requires DockerEngine (installed automatically if missing). The image ships no model: connect a local Ollama endpoint or enter an OpenAI/DeepSeek-compatible API key in Settings. On first start create the administrator account; documents, embeddings and chats stay in DockerAppData/anythingllmdocker/storage. The image is ~2 GB and the app needs outbound network access for model lists/pricing. Plain HTTP - use a TLS reverse proxy before exposing it to the internet.",
+  "probe": {
+    "user_in_image": "anythingllm",
+    "entrypoint": [
+      "/bin/bash",
+      "/usr/local/bin/docker-entrypoint.sh"
+    ],
+    "cmd": null,
+    "exposed_ports": [],
+    "declared_volumes": [],
+    "image_healthcheck": [
+      "CMD-SHELL",
+      "/bin/bash /usr/local/bin/docker-healthcheck.sh || exit 1"
+    ],
+    "digest": "mintplexlabs/anythingllm@sha256:daf5a6ae9d363ed578e7d41e2d0668c7eaa604bd90b0ff27435f893b0906833e",
+    "architecture": "x86_64",
+    "platforms": [
+      "x86_64",
+      "aarch64"
+    ],
+    "http_client_in_image": "",
+    "trial_run": {
+      "ok": false,
+      "http_code": "",
+      "state": "exited",
+      "paths": [
+        "/app"
+      ],
+      "host_port": 18000,
+      "log_tail": "================================================================\n⚠️  ⚠️  ⚠️  WARNING: STORAGE_DIR environment variable is not set! ⚠️  ⚠️  ⚠️\n\nNot setting this will result in data loss on container restart since\nthe application will not have a persistent storage location.\nIt can also result in weird errors in various parts of the application.\n\nPlease run the container with the official docker command at\nhttps://docs.anythingllm.com/installation-docker/quickstart\n\n⚠️  ⚠️  ⚠️  WARNING: STORAGE_DIR environment variable is not set! ⚠️  ⚠️  ⚠️\n================================================================\nnode:internal/validators:162\n    throw new ERR_INVALID_ARG_TYPE(name, 'string', value);\n    ^\n\nTypeError [ERR_INVALID_ARG_TYPE]: The \"paths[0]\" argument must be of type string. Received undefined\n    at new NodeError (node:internal/errors:405:5)\n    at validateString (node:internal/validators:162:11)\n    at Object.resolve (node:path:1115:7)\n    at Object.<anonymous> (/app/collector/utils/files/index.js:12:12)\n    at Module._compile (node:internal/modules/cjs/loader:1364:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)\n    at Module.load (node:internal/modules/cjs/loader:1203:32)\n    at Module._load (node:internal/modules/cjs/loader:1019:12)\n    at Module.require (node:internal/modules/cjs/loader:1231:19)\n    at require (node:internal/modules/helpers:177:18) {\n  code: 'ERR_INVALID_ARG_TYPE'\n}\n\nNode.js v18.20.8",
+      "files_in_mounts": ""
+    },
+    "docker_hub": {},
+    "github": {
+      "owner": "Mintplex-Labs",
+      "repo": "anything-llm",
+      "description": "Stop renting your intelligence. Own it with AnythingLLM. Everything you need for a powerful local-first agent experience ",
+      "license": "MIT",
+      "homepage": "https://anythingllm.com"
+    }
+  },
+  "entrypoint_file": "src/entrypoint.sh",
+  "platform": "x86_64",
+  "user": "1000:1000",
+  "publisher": "Moechz",
+  "compose_project": "anythingllmdocker",
+  "github_repo": "anythingllm",
+  "upstream_version": "1.19.0",
+  "release_tag_prefix": "v",
+  "version": "1.19.0-1",
+  "help": "https://github.com/Moechz/anythingllm/issues",
+  "official": "https://github.com/Mintplex-Labs/anything-llm",
+  "license": "MIT",
+  "docker_socket": false,
+  "group_add": [],
+  "healthcheck": [
+    "CMD-SHELL",
+    "curl -s -o /dev/null http://127.0.0.1:3001/api/ping || exit 1"
+  ],
+  "healthcheck_start_period": "60s",
+  "healthcheck_interval": "15s",
+  "healthcheck_retries": 5,
+  "http_path": "/api/ping",
+  "translations": {
+    "zh-cn": {
+      "descript": "AnythingLLM 是一个私有的 AI 工作台：和自己的文档对话、搭建知识库、自由选择模型——可以是 NAS 上本机的 Ollama，也可以是云端 API。所有内容（文档、向量、聊天记录与设置）都保存在你自己的设备上，不上传到厂商云端；整个工作区就在应用数据目录里。",
+      "important": "需要 DockerEngine（缺失时应用中心会自动安装）。镜像本身不含模型：请在设置里接入本机 Ollama 端点，或填写 OpenAI/DeepSeek 兼容的 API Key。首次启动先创建管理员账号；文档、向量与聊天记录都保存在 DockerAppData/anythingllmdocker/storage。镜像约 2 GB，且应用需要外网访问以拉取模型列表/价格数据。界面为纯 HTTP，暴露到公网前请配置带 TLS 的反向代理。",
+      "release_note": "1. 首个版本：基于 Docker Hub 的 AnythingLLM 1.19.0，以非 root 容器运行。私有 RAG 工作台，支持文档对话、向量存储与本地/远程模型；数据全部保存在应用数据目录。"
+    },
+    "zh-hk": {
+      "descript": "AnythingLLM 是一個私有的 AI 工作台：和自己的文件對話、建立知識庫、自由選擇模型——可以是 NAS 上本機的 Ollama，也可以是雲端 API。所有內容（文件、向量、聊天記錄與設定）都保存在你自己的裝置上，不上傳到廠商雲端；整個工作區就在應用資料目錄裡。",
+      "important": "需要 DockerEngine（缺少時應用中心會自動安裝）。映像本身不含模型：請在設定裡接入本機 Ollama 端點，或填寫 OpenAI/DeepSeek 相容的 API Key。首次啟動先建立管理員帳號；文件、向量與聊天記錄都保存在 DockerAppData/anythingllmdocker/storage。映像約 2 GB，且應用需要外網存取以拉取模型列表/價格資料。介面為純 HTTP，公開到互聯網前請配置帶 TLS 的反向代理。",
+      "release_note": "1. 首個版本：基於 Docker Hub 的 AnythingLLM 1.19.0，以非 root 容器運行。私有 RAG 工作台，支援文件對話、向量存儲與本地/遠端模型；資料全部保存在應用資料目錄。"
+    }
+  },
+  "data_notes": "`/app/server/storage` (mounted from `DockerAppData/anythingllmdocker/storage`) holds the SQLite database, uploaded documents, vector cache, chat history and settings.",
+  "design_notes": [
+    "**Already non-root.** The image runs as uid 1000 (`anythingllm`); the package pins the same user and points `STORAGE_DIR` at the mounted volume (without it the bundled collector crashes on start).",
+    "**No bundled model.** The package stays small in scope: connect Ollama or a cloud API in Settings.",
+    "**One volume, one port.** Only the storage folder is persistent and only port 3001 is published."
+  ],
+  "limitations": [
+    "- No model is bundled: without an Ollama endpoint or API key the chat has nothing to answer with.",
+    "- The web UI is plain HTTP; use a TLS reverse proxy before exposing it to the internet.",
+    "- The image is ~2 GB and startup pulls model metadata from the internet, so the first start is slower on a disconnected NAS."
+  ],
+  "host_port": 8042
+}

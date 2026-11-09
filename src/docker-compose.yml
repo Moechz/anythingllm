@@ -1,0 +1,52 @@
+# ===========================================================================
+# AnythingLLM for TerraMaster TOS 7 (Docker application)
+# ===========================================================================
+# Upstream image : mintplexlabs/anythingllm:1.19.0 (Docker Hub, used unmodified)
+#                  -> https://github.com/Mintplex-Labs/anything-llm
+#
+# Ports   : host 8042 -> container 3001. The host port is in the
+#           TOS-recommended 8000-19999 range and is not one of the reserved
+#           ports (22/80/443/445/3306/5050/5432/6379/8181/8443).
+# Volumes : all persistent data lives below
+#           /Volume1/DockerAppData/anythingllmdocker/. The /Volume* wildcard is
+#           deliberately NOT used: the platform does not expand it.
+# TOS rules honoured: Docker Hub image with a fixed tag (never ':latest'),
+#           container_name == application id, restart: unless-stopped,
+#           non-root user, no privileged mode, no network_mode: host, no
+#           cap_add, explicit TZ, a healthcheck on the only service, and
+#           x-app-meta as the last block.
+# Escaping: docker compose interpolates ${VAR}/$VAR in compose files, so any
+#           '$' meant for the shell is written '$$'.
+#
+# NOTE for maintainers: never place a comment line directly in front of a
+# "- value" sequence item (ports, volumes, ...). The official
+# TOSAppSelfTestingTool parses the compose file line by line; a comment inside
+# a sequence makes it skip its permission sync, the mounted directories stay
+# root-owned and the non-root container cannot write into them.
+
+services:
+  anythingllmdocker:
+    image: mintplexlabs/anythingllm:1.19.0
+    container_name: anythingllmdocker
+    restart: unless-stopped
+    user: "1000:1000"
+    ports:
+      - "8042:3001"
+    environment:
+      TZ: "Asia/Shanghai"
+      STORAGE_DIR: "/app/server/storage"
+    volumes:
+      - /Volume1/DockerAppData/anythingllmdocker/storage:/app/server/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://127.0.0.1:3001/api/ping || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+# TOS App Center web metadata (must be the last block of the file):
+# web.port is the published host port above, protocol is http.
+x-app-meta:
+  web:
+    port: 8042
+    protocol: http
